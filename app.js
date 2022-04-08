@@ -1,11 +1,11 @@
 const path = require('path');
 
 const express = require('express');
-const session = require('expresss-session');
+const session = require('express-session');
 const mongodbStore = require('connect-mongodb-session');
-const csrf = reuquire('csurf');
+const csrf = require('csurf');
 
-const db = reuire('./data/databse');
+const db = require('./data/database');
 const blogRoutes = require('./routes/blog');
 
 const MongoDBStore = mongodbStore(session);

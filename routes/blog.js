@@ -246,7 +246,7 @@ router.get('/posts/:id/edit', async function (req, res) {
   });
 });
 
-router.post('/posts/:id/edit', asyn function (req, res) {
+router.post('/posts/:id/edit', async function (req, res) {
   const enteredTitle = req.body.title;
   const enteredContent = req.body.content;
   const postId = new ObjectId(req.params.id);
