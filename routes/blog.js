@@ -8,14 +8,14 @@ const ObjectId = mongodb.ObjectId;
 const router = express.Router();
 
 router.get('/', function (req, res) {
-  res.render('welcome', {csrfToken: req.csrfToken() });
+  res.render('welcome', { csrfToken: req.csrfToken() });
 });
 
 router.get('/signup', function (req, res) {
   let sessionInputData = req.session.inputData;
-  
+
   if (!sessionInputData) {
-    sesssionInputData = {
+    sessionInputData = {
       hasError: false,
       email: '',
       confirmEmail: '',
@@ -61,7 +61,7 @@ router.post('/signup', async function (req, res) {
     !enteredPassword ||
     enteredPassword.trim().length < 6 ||
     enteredEmail !== enteredConfirmEmail ||
-    !enteredEmail.include('@')
+    !enteredEmail.includes('@')
   ) {
     req.session.inputData = {
       hasError: true,
@@ -99,7 +99,7 @@ router.post('/signup', async function (req, res) {
   const hashedPassword = await bcrypt.hash(enteredPassword, 12);
 
   const user = {
-    email: entered,
+    email: enteredEmail,
     password: hashedPassword,
   };
 
@@ -113,10 +113,10 @@ router.post('/login', async function (req, res) {
   const enteredEmail = userData.email;
   const enteredPassword = userData.password;
 
-  const exitingUser = await db
+  const existingUser = await db
     .getDb()
     .collection('users')
-    .findOne({ email: enteredEamil });
+    .findOne({ email: enteredEmail });
 
   if (!existingUser) {
     req.session.inputData = {
@@ -135,7 +135,7 @@ router.post('/login', async function (req, res) {
     enteredPassword,
     existingUser.password
   );
-  
+
   if (!passwordsAreEqual) {
     req.session.inputData = {
       hasError: true,
@@ -184,7 +184,7 @@ router.get('/admin', async function (req, res) {
 
 router.post('/logout', function (req, res) {
   req.session.user = null;
-  req.sesssion.isAuthenticated = false;
+  req.session.isAuthenticated = false;
   res.redirect('/');
 });
 
@@ -206,11 +206,11 @@ router.post('/posts', async function (req, res) {
     };
 
     res.redirect('/admin');
-    return; // or return res.redirect('/admin')
+    return; // or return res.redirect('/admin'); => Has the same effect
   }
 
   const newPost = {
-    title: enteteredTitle,
+    title: enteredTitle,
     content: enteredContent,
   };
 
@@ -224,11 +224,11 @@ router.get('/posts/:id/edit', async function (req, res) {
   const post = await db.getDb().collection('posts').findOne({ _id: postId });
 
   if (!post) {
-    return res.render('404');
+    return res.render('404'); // 404.ejs is missing at this point - it will be added later!
   }
 
   let sessionInputData = req.session.inputData;
-  
+
   if (!sessionInputData) {
     sessionInputData = {
       hasError: false,
@@ -255,7 +255,7 @@ router.post('/posts/:id/edit', async function (req, res) {
     !enteredTitle ||
     !enteredContent ||
     enteredTitle.trim() === '' ||
-    ententeredContent.trim() === ''
+    enteredContent.trim() === ''
   ) {
     req.session.inputData = {
       hasError: true,
@@ -265,16 +265,23 @@ router.post('/posts/:id/edit', async function (req, res) {
     };
 
     res.redirect(`/posts/${req.params.id}/edit`);
-    return;
+    return; 
   }
 
   await db
     .getDb()
     .collection('posts')
-    .inputData(
+    .updateOne(
       { _id: postId },
-      { $set: { title: enteredTitle, content: ententeredContent } }
+      { $set: { title: enteredTitle, content: enteredContent } }
     );
+
+  res.redirect('/admin');
+});
+
+router.post('/posts/:id/delete', async function (req, res) {
+  const postId = new ObjectId(req.params.id);
+  await db.getDb().collection('posts').deleteOne({ _id: postId });
 
   res.redirect('/admin');
 });

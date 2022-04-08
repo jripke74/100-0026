@@ -2,8 +2,11 @@
   <link rel="stylesheet" href="/styles/forms.css">
   <link rel="stylesheet" href="/styles/auth.css">
 </head>
+
+<body>
   <%- include('includes/header.ejs') %>
   <main id="signup">
+    <h1>Login</h1>
     <% if (inputData.hasError) { %>
       <p id="input-error"><%= inputData.message %></p>
     <% } %>
@@ -11,15 +14,18 @@
       <input type="hidden" value="<%= csrfToken %>" name="_csrf">
       <div class="form-control">
         <label for="email">Email</label>
-        <input type="email" name="email" id="email" value="<%= inputData.email %>" required>
+        <input type="email" id="email" name="email" value="<%= inputData.email %>" required>
       </div>
       <div class="form-control">
         <label for="password">Password</label>
-        <input type="password" name="password" id="password" value="<%= inputData.password %>" required>
+        <input type="password" id="password" name="password" value="<%= inputData.password %>" required>
       </div>
-      <div id="auth-alternative">
-        <a href="/signup" class="btn btn-alt">Create a new user</a>
-      </div>
-    </form>  
-  </main> 
+      <button class="btn">Log in</button>
+    </form>
+    <div id="auth-alternative">
+      <a class="btn btn-alt" href="/signup">Create a new user</a>
+    </div>
+  </main>
+</body>
+
 </html>

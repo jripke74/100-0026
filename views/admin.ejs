@@ -1,20 +1,20 @@
 <%- include('includes/head.ejs', { title: 'Admin' }) %>
-<link rel="stylesheet" href="/styles/form.css">
+<link rel="stylesheet" href="/styles/forms.css">
 <link rel="stylesheet" href="/styles/posts.css">
 </head>
 <body>
   <%- include('includes/header.ejs') %>
   <main>
-    <h1>Administrative Blog Posts</h1>
+    <h1>Administrate Blog Posts</h1>
     <section>
       <h2>Create a New Post</h2>
-      <%- include('includes/post-form', {
-        submitUrl: '/posts',
-        hasError: inputData.hasError,
-        errorMessage: inputData.message,
-        title: inputData.title,
-        content: inputData.content
-      }) %> 
+      <%- include('includes/post-form', { 
+        submitUrl: '/posts', 
+        hasError: inputData.hasError, 
+        errorMessage: inputData.message, 
+        title: inputData.title, 
+        content: inputData.content }) 
+      %>
     </section>
     <section>
       <h2>All Blog Posts</h2>
@@ -30,3 +30,4 @@
     </section>
   </main>
 </body>
+</html>
